@@ -11,14 +11,22 @@
   "offers": {
     "@type": "Offer",
     "price": "0",
-    "priceCurrency": "INR"
+    "priceCurrency": "USD"
   },
-  "description": "Calculate your mutual fund returns and visualize your wealth compounding over time."
+  "description": "Free Interactive SIP Calculator. Calculate your mutual fund returns, adjust for inflation, and visualize your wealth compounding over time."
 }
 </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Premium SIP Calculator</title>
+    <title>SIP Calculator | Free Mutual Fund Compounding Return Calculator</title>
+    <meta name="description" content="Calculate your mutual fund returns and visualize wealth compounding over time. Supports multiple currencies, inflation adjustment, and detailed yearly breakdowns.">
+    <meta name="keywords" content="SIP Calculator, Mutual Fund Calculator, Compounding Calculator, Investment Calculator, Wealth Projections, ROI Calculator, SIP Returns">
+    <meta property="og:title" content="SIP Calculator | Free Mutual Fund Compounding Return Calculator">
+    <meta property="og:description" content="Calculate your mutual fund returns and visualize wealth compounding over time with this interactive tool.">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="SIP Calculator | Free Mutual Fund Compounding Return Calculator">
+    <meta name="twitter:description" content="Calculate your mutual fund returns and visualize wealth compounding over time.">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -87,9 +95,10 @@
             border-bottom: 1px solid var(--border);
         }
 
-        .header-text h2 {
+        .header-text h1 {
             color: var(--text-main);
             font-size: 22px;
+            font-weight: 700;
         }
 
         .header-text p {
@@ -438,13 +447,21 @@
 </head>
 <body>
 
-<div class="calculator-wrapper">
-    <div class="calculator-header">
+<main class="calculator-wrapper">
+    <header class="calculator-header">
         <div class="header-text">
-            <h2>Wealth Projections</h2>
-            <p>Interactive SIP Compounding Engine</p>
+            <h1>SIP Return Calculator</h1>
+            <p>Interactive Wealth Projections & Compounding Engine</p>
         </div>
         <div class="header-actions">
+            <select id="currency-select" class="action-btn" title="Select Currency" style="appearance: none; padding-right: 32px; background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23111827%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'); background-repeat: no-repeat; background-position: right 12px center; background-size: 10px; cursor: pointer;">
+                <option value="INR" data-symbol="₹" data-locale="en-IN">₹ INR</option>
+                <option value="USD" data-symbol="$" data-locale="en-US">$ USD</option>
+                <option value="EUR" data-symbol="€" data-locale="de-DE">€ EUR</option>
+                <option value="GBP" data-symbol="£" data-locale="en-GB">£ GBP</option>
+                <option value="AUD" data-symbol="A$" data-locale="en-AU">A$ AUD</option>
+                <option value="CAD" data-symbol="C$" data-locale="en-CA">C$ CAD</option>
+            </select>
             <button class="action-btn" onclick="window.print()">
                 <svg width="16" height="16" viewBox="0 0 16 16">
                   <path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/>
@@ -457,7 +474,7 @@
                 <span class="slider-toggle"></span>
             </label>
         </div>
-    </div>
+    </header>
 
     <div class="calculator-grid">
         <!-- Input Section -->
@@ -466,7 +483,7 @@
             <div class="input-group">
                 <div class="label-row">
                     <label>Monthly Investment</label>
-                    <div class="value-display">₹ <input type="number" id="investment-input" value="10000"></div>
+                    <div class="value-display"><span class="currency-symbol">₹ </span><input type="number" id="investment-input" value="10000"></div>
                 </div>
                 <input type="range" id="investment-slider" min="500" max="100000" step="500" value="10000">
             </div>
@@ -506,16 +523,16 @@
                 <div class="result-grid">
                     <div class="result-item">
                         <span>Total Invested</span>
-                        <h3 id="invested-amount">₹ 0</h3>
+                        <h3 id="invested-amount"><span class="currency-symbol">₹ </span>0</h3>
                     </div>
                     <div class="result-item">
                         <span>Wealth Gained</span>
-                        <h3 id="est-returns">₹ 0</h3>
+                        <h3 id="est-returns"><span class="currency-symbol">₹ </span>0</h3>
                     </div>
                 </div>
                 <div class="result-item total-value">
                     <span>Expected Total Value</span>
-                    <h2 id="total-value">₹ 0</h2>
+                    <h2 id="total-value"><span class="currency-symbol">₹ </span>0</h2>
                 </div>
             </div>
             
@@ -554,7 +571,7 @@
     </div>
 
     <!-- Social Footer -->
-    <div class="social-footer" style="flex-wrap: wrap;">
+    <footer class="social-footer" style="flex-wrap: wrap;">
         <span style="color: var(--text-muted); font-size: 14px;">For any help and queries, connect with me:</span>
         <a href="#" class="social-link" title="Replace # with your LinkedIn URL" target="_blank" rel="noopener noreferrer">
             <svg viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
@@ -564,8 +581,8 @@
             <svg viewBox="0 0 24 24"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg>
             Discord
         </a>
-    </div>
-</div>
+    </footer>
+</main>
 
 <script>
     // Theme Toggle Logic
@@ -593,12 +610,23 @@
     const totalValueEl = document.getElementById('total-value');
     const milestoneBox = document.getElementById('milestone-box');
     const inflationToggle = document.getElementById('inflation-toggle');
+    const currencySelect = document.getElementById('currency-select');
+    const currencySymbols = document.querySelectorAll('.currency-symbol');
 
     let sipChart;
     let donutChart;
     let hasShownConfetti = false;
+    let currentCurrency = { symbol: '₹', locale: 'en-IN' };
 
     inflationToggle.addEventListener('change', calculateSIP);
+    currencySelect.addEventListener('change', (e) => {
+        const option = e.target.options[e.target.selectedIndex];
+        currentCurrency.symbol = option.getAttribute('data-symbol');
+        currentCurrency.locale = option.getAttribute('data-locale');
+        
+        currencySymbols.forEach(el => el.innerText = currentCurrency.symbol + ' ');
+        calculateSIP();
+    });
 
     // Tab Switching Logic
     window.switchTab = function(tabId) {
@@ -611,7 +639,18 @@
 
     // Number Formatter
     const formatCurrency = (num) => {
-        return new Intl.NumberFormat('en-IN', { maximumFractionDigits: 0 }).format(num);
+        return new Intl.NumberFormat(currentCurrency.locale, { maximumFractionDigits: 0 }).format(num);
+    };
+
+    const formatCompact = (num) => {
+        if (currentCurrency.locale === 'en-IN') {
+            if(num >= 10000000) return (num/10000000).toFixed(1) + 'Cr';
+            if(num >= 100000) return (num/100000).toFixed(1) + 'L';
+        } else {
+            if(num >= 1000000) return (num/1000000).toFixed(1) + 'M';
+            if(num >= 1000) return (num/1000).toFixed(1) + 'K';
+        }
+        return num.toString();
     };
 
     // Animated Number Counter
@@ -623,7 +662,7 @@
             // Ease out function
             const easeProgress = 1 - Math.pow(1 - progress, 3);
             let currentVal = Math.floor(easeProgress * (end - start) + start);
-            obj.innerText = '₹ ' + formatCurrency(currentVal);
+            obj.innerHTML = `<span class="currency-symbol">${currentCurrency.symbol} </span>` + formatCurrency(currentVal);
             if (progress < 1) {
                 window.requestAnimationFrame(step);
             }
@@ -691,15 +730,18 @@
         prevTotal = M;
 
         // Milestone Logic
-        if (M >= 10000000) {
-            let crYears = 0;
+        let milestoneTarget = currentCurrency.locale === 'en-IN' ? 10000000 : 1000000;
+        let milestoneText = currentCurrency.locale === 'en-IN' ? '1 Crore' : '1 Million';
+        
+        if (M >= milestoneTarget) {
+            let targetYears = 0;
             for(let j = 1; j <= N; j++) {
                 let tempM = P * ((Math.pow(1 + i, j*12) - 1) / i) * (1 + i);
                 if (adjustForInflation) tempM = tempM / Math.pow(1 + inflationRate, j);
-                if(tempM >= 10000000) { crYears = j; break; }
+                if(tempM >= milestoneTarget) { targetYears = j; break; }
             }
             milestoneBox.style.display = 'block';
-            milestoneBox.innerText = `🎉 You will cross ₹1 Crore in Year ${crYears}!`;
+            milestoneBox.innerText = `🎉 You will cross ${currentCurrency.symbol}${milestoneText} in Year ${targetYears}!`;
             
             if (!hasShownConfetti && typeof confetti === 'function') {
                 confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
@@ -732,9 +774,9 @@
 
             tableHTML += `<tr>
                 <td style="text-align: left;">Year ${j}</td>
-                <td>₹ ${formatCurrency(inv_j)}</td>
-                <td style="color: var(--primary);">₹ ${formatCurrency(Math.max(0, return_j))}</td>
-                <td style="font-weight: 600;">₹ ${formatCurrency(M_j)}</td>
+                <td>${currentCurrency.symbol} ${formatCurrency(inv_j)}</td>
+                <td style="color: var(--primary);">${currentCurrency.symbol} ${formatCurrency(Math.max(0, return_j))}</td>
+                <td style="font-weight: 600;">${currentCurrency.symbol} ${formatCurrency(M_j)}</td>
             </tr>`;
         }
         
@@ -803,7 +845,7 @@
                         padding: 12,
                         callbacks: {
                             label: function(context) {
-                                return context.dataset.label + ': ₹ ' + formatCurrency(context.parsed.y);
+                                return context.dataset.label + ': ' + currentCurrency.symbol + ' ' + formatCurrency(context.parsed.y);
                             }
                         }
                     }
@@ -818,9 +860,7 @@
                         ticks: { 
                             color: textColor,
                             callback: function(value) {
-                                if(value >= 10000000) return '₹' + (value/10000000).toFixed(1) + 'Cr';
-                                if(value >= 100000) return '₹' + (value/100000).toFixed(1) + 'L';
-                                return '₹' + value;
+                                return currentCurrency.symbol + formatCompact(value);
                             }
                         }
                     }
@@ -873,7 +913,7 @@
                         padding: 12,
                         callbacks: {
                             label: function(context) {
-                                return context.label + ': ₹ ' + formatCurrency(context.parsed);
+                                return context.label + ': ' + currentCurrency.symbol + ' ' + formatCurrency(context.parsed);
                             }
                         }
                     }
